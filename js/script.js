@@ -12,29 +12,16 @@ function clearDisplay() {
 
 //calculate function
 function calculateTotal() {
-    try{
+    try {
+        if (!display.value) return;
 
-        let expression = display.value
-        if(!expression) return;
-          
-        //Handle Brackets 
-        while(expression.includes('(')){
-            expression = expression.replace(/\(([^()]+)\)/g,(math, subExpr) => {
-                return parseBOMDAS(subExpr)
-            });
-        }
+        //This Force BOMDAS by splitting the math values by the division operator
+        let steps = display.value.split('/').map(piece => eval(piece));
+        
+        let finalResult = eval(steps.join('/'));
 
-        //calculate the final remaing BOMDAS expression
-        let result = parseBOMDAS(expression);
-
-        if(result == Infinity || isNaN(result)){
-            display.value = "Math Error"
-        }else{
-            display.value = result
-        }
-
-
-    }catch(error){
-        display.value = "Math Error"
+        display.value = (finalResult === Infinity || isNaN(finalResult)) ? "Math Error" : finalResult;
+    } catch (error) {
+        display.value = "Math Error";
     }
 }
